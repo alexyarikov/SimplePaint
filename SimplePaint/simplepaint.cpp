@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "simplepaint.h"
+#include "figurescene.h"
 
 SimplePaint::SimplePaint(QWidget *parent) : QMainWindow(parent)
 {
@@ -17,7 +18,24 @@ void SimplePaint::setupUi()
     createActions();
     createMenu();
     createToolbar();
+    createView();
     createStatusBar();
+}
+
+void SimplePaint::createView()
+{
+    _scene = new FigureScene(this);
+
+    QHBoxLayout* layout = new QHBoxLayout();
+
+    QGraphicsView* view = new QGraphicsView(_scene);
+    view->setBackgroundBrush(QBrush(Qt::white));
+    layout->addWidget(view);
+
+    QWidget* central_widget = new QWidget();
+    central_widget->setLayout(layout);
+    central_widget->setCursor(Qt::CrossCursor);
+    setCentralWidget(central_widget);
 }
 
 void SimplePaint::createActions()
@@ -28,19 +46,19 @@ void SimplePaint::createActions()
     _actNew->setStatusTip(tr("New drawing"));
     connect(_actNew, &QAction::triggered, this, &SimplePaint::newDrawing);
 
-    // exit
+    // exit action
     _actExit = new QAction(QIcon(":/images/exit.png"), tr("E&xit"), this);
     _actExit->setShortcuts(QKeySequence::Quit);
     _actExit->setStatusTip(tr("Exit the application"));
     connect(_actExit, &QAction::triggered, this, &SimplePaint::exit);
 
-    // undo
+    // undo action
     _actUndo = new QAction(QIcon(":/images/undo.png"), tr("&Undo"));
     _actUndo->setShortcuts(QKeySequence::Undo);
     _actUndo->setStatusTip(tr("Undo"));
     connect(_actUndo, &QAction::triggered, this, &SimplePaint::undo);
 
-    // redo
+    // redo action
     _actRedo = new QAction(QIcon(":/images/redo.png"), tr("&Redo"), this);
     _actRedo->setShortcuts(QKeySequence::Redo);
     _actRedo->setStatusTip(tr("Redo"));
@@ -51,6 +69,16 @@ void SimplePaint::createActions()
     _actAbout->setShortcuts(QKeySequence::HelpContents);
     _actAbout->setStatusTip(tr("About this application"));
     connect(_actAbout, &QAction::triggered, this, &SimplePaint::about);
+
+    // draw rectangle
+    _actRectangle = new QAction(QIcon(":/images/rectangle.png"), tr("&Rectangle"), this);
+    _actRectangle->setStatusTip(tr("Draw rectangle"));
+    connect(_actRectangle, &QAction::triggered, this, &SimplePaint::drawRectangle);
+
+    // draw ellipse
+    _actEllipse = new QAction(QIcon(":/images/ellipse.png"), tr("&Ellipse"), this);
+    _actEllipse->setStatusTip(tr("Draw rectangle"));
+    connect(_actEllipse, &QAction::triggered, this, &SimplePaint::drawEllipse);
 }
 
 void SimplePaint::createMenu()
@@ -70,14 +98,20 @@ void SimplePaint::createMenu()
 
 void SimplePaint::createToolbar()
 {
-    QToolBar *toolbar = addToolBar(tr("File"));
+    QToolBar *toolbar = addToolBar(tr("Simple paint"));
     toolbar->addAction(_actNew);
     toolbar->addSeparator();
 
-    QComboBox* cmbFigures = new QComboBox();
-    cmbFigures->addItem(QIcon(":/images/rectangle.png"), tr("Rectangle"));
-    cmbFigures->addItem(QIcon(":/images/ellipse.png"), tr("Ellipse"));
-    toolbar->addWidget(cmbFigures);
+    QMenu* mnuFigures = new QMenu(this);
+    mnuFigures->addAction(_actRectangle);
+    mnuFigures->addAction(_actEllipse);
+
+    _btnFigures = new QToolButton();
+    _btnFigures->setPopupMode(QToolButton::InstantPopup);
+    _btnFigures->setMenu(mnuFigures);
+    _btnFigures->setDefaultAction(_actRectangle);
+    toolbar->addWidget(_btnFigures);
+
     toolbar->addSeparator();
 
     toolbar->addAction(_actUndo);
@@ -115,4 +149,14 @@ void SimplePaint::undo()
 void SimplePaint::redo()
 {
     QMessageBox::information(Q_NULLPTR, qAppName(), "redo");
+}
+
+void SimplePaint::drawRectangle()
+{
+    _btnFigures->setDefaultAction(_actRectangle);
+}
+
+void SimplePaint::drawEllipse()
+{
+    _btnFigures->setDefaultAction(_actEllipse);
 }

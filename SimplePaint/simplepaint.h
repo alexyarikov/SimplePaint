@@ -1,6 +1,8 @@
 #pragma once
 #include <QtWidgets/QMainWindow>
 
+class FigureScene;
+
 class SimplePaint : public QMainWindow
 {
     Q_OBJECT
@@ -15,12 +17,17 @@ private:
     QPointer<QAction> _actUndo;
     QPointer<QAction> _actRedo;
     QPointer<QAction> _actAbout;
+    QPointer<QAction> _actRectangle;
+    QPointer<QAction> _actEllipse;
+    QPointer<QToolButton> _btnFigures;
+    QPointer<FigureScene> _scene;
 
     void setupUi();
     void createActions();
     void createMenu();
     void createToolbar();
     void createStatusBar();
+    void createView();
 
 private slots:
     void newDrawing();
@@ -28,4 +35,6 @@ private slots:
     void exit();
     void undo();
     void redo();
+    void drawRectangle();
+    void drawEllipse();
 };

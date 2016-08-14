@@ -49,6 +49,15 @@
     <ClCompile Include="GeneratedFiles\qrc_simplepaint.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="figurescene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_figurescene.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_figurescene.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -61,6 +70,9 @@
     </CustomBuild>
     <CustomBuild Include="simplepaint.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="figurescene.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
