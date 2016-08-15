@@ -54,7 +54,7 @@ void SimplePaint::createActions()
     connect(_actExit, &QAction::triggered, this, &SimplePaint::exit);
 
     // undo action
-    _actUndo = new QAction(QIcon(":/images/undo.png"), tr("&Undo"));
+    _actUndo = new QAction(QIcon(":/images/undo.png"), tr("&Undo"), this);
     _actUndo->setShortcuts(QKeySequence::Undo);
     _actUndo->setStatusTip(tr("Undo"));
     connect(_actUndo, &QAction::triggered, this, &SimplePaint::undo);

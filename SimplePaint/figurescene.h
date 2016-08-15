@@ -15,4 +15,5 @@ protected:
 
 private:
     QGraphicsRectItem* _rectangle;
+    QPointF _draw_start_point;
 };
