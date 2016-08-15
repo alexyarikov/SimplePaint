@@ -25,6 +25,7 @@ void SimplePaint::setupUi()
 void SimplePaint::createView()
 {
     _scene = new FigureScene(this);
+    _scene->setSceneRect(QRectF(0, 0, 5000, 5000));
 
     QHBoxLayout* layout = new QHBoxLayout();
 

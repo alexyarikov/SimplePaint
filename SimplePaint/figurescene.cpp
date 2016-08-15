@@ -12,12 +12,14 @@ FigureScene::~FigureScene()
 
 void FigureScene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
+    Q_CHECK_PTR(mouseEvent);
+
     if (mouseEvent->button() != Qt::LeftButton)
         return;
 
     _rectangle = new QGraphicsRectItem();
     _rectangle->setBrush(Qt::red);
-    _rectangle->setPos(mouseEvent->scenePos());
+    _rectangle->setRect(mouseEvent->scenePos().x(), mouseEvent->scenePos().y(), 0, 0);
     addItem(_rectangle);
 
     QGraphicsScene::mousePressEvent(mouseEvent);
@@ -25,14 +27,25 @@ void FigureScene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 
 void FigureScene::mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
+    Q_CHECK_PTR(mouseEvent);
+
     if (_rectangle)
     {
-        QRectF rect = _rectangle->rect();
-        //TODO...
-        _rectangle->setRect(rect);
+        QPointF pos = mouseEvent->scenePos();           // current mouse position 
+        QPointF last_pos = mouseEvent->lastScenePos();  // previous mouse position
+
+        QRectF new_rect;
+
+        if (last_pos.x() > pos.x())
+        {
+            new_rect.setWidth();
+        }
+
+        
+        
     }
 
-    //QGraphicsScene::mouseMoveEvent(mouseEvent);
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void FigureScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
