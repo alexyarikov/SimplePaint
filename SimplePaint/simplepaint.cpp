@@ -28,6 +28,7 @@ void SimplePaint::createView()
     _scene->setSceneRect(QRectF(0, 0, 5000, 5000));
 
     QHBoxLayout* layout = new QHBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
 
     QGraphicsView* view = new QGraphicsView(_scene);
     view->setBackgroundBrush(QBrush(Qt::white));
@@ -154,10 +155,12 @@ void SimplePaint::redo()
 
 void SimplePaint::drawRectangle()
 {
+    _scene->setFigureType(FigureScene::FigureType::Rectangle);
     _btnFigures->setDefaultAction(_actRectangle);
 }
 
 void SimplePaint::drawEllipse()
 {
+    _scene->setFigureType(FigureScene::FigureType::Ellipse);
     _btnFigures->setDefaultAction(_actEllipse);
 }
