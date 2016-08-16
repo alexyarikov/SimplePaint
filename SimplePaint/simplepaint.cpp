@@ -100,25 +100,37 @@ void SimplePaint::createMenu()
 
 void SimplePaint::createToolbar()
 {
-    QToolBar *toolbar = addToolBar(tr("Simple paint"));
-    toolbar->addAction(_actNew);
-    toolbar->addSeparator();
-
     QMenu* mnuFigures = new QMenu(this);
     mnuFigures->addAction(_actRectangle);
     mnuFigures->addAction(_actEllipse);
 
+    QToolBar *toolbar = addToolBar(tr("Simple paint"));
+    toolbar->addAction(_actNew);
+    toolbar->addSeparator();
+
+    // choose figure color
+    _cmbColors = new QComboBox(this);
+    _cmbColors->addItem(QIcon(":/images/black.png"), tr("Black"), QVariant((int)Qt::black));
+    _cmbColors->addItem(QIcon(":/images/red.png"), tr("Red"), QVariant((int)Qt::red));
+    _cmbColors->addItem(QIcon(":/images/yellow.png"), tr("Yellow"), QVariant((int)Qt::yellow));
+    _cmbColors->setCurrentIndex(0);
+    QObject::connect(_cmbColors, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SimplePaint::colorChanged);
+    toolbar->addWidget(_cmbColors);
+    toolbar->addSeparator();
+
+    // choose figure type
     _btnFigures = new QToolButton();
     _btnFigures->setPopupMode(QToolButton::InstantPopup);
     _btnFigures->setMenu(mnuFigures);
     _btnFigures->setDefaultAction(_actRectangle);
     toolbar->addWidget(_btnFigures);
-
     toolbar->addSeparator();
 
+    // undo/redo
     toolbar->addAction(_actUndo);
     toolbar->addAction(_actRedo);
 
+    // about
     toolbar->addSeparator();
     toolbar->addAction(_actAbout);
 }
@@ -163,4 +175,11 @@ void SimplePaint::drawEllipse()
 {
     _scene->setFigureType(FigureScene::FigureType::Ellipse);
     _btnFigures->setDefaultAction(_actEllipse);
+}
+
+void SimplePaint::colorChanged(int index)
+{
+    QComboBox* combobox = qobject_cast<QComboBox*>(sender());
+    if (combobox)
+        _scene->setFigureColor(QColor((Qt::GlobalColor)combobox->itemData(index).toInt()));
 }

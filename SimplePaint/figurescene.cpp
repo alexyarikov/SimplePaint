@@ -14,30 +14,20 @@ void FigureScene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
     if (mouseEvent->button() != Qt::LeftButton)
         return;
 
-    QGraphicsItem* item = Q_NULLPTR;
+    _draw_start_point = mouseEvent->scenePos();
 
     switch (_figureType)
     {
         case FigureType::Rectangle:
         {
-            item = _rectangle = new QGraphicsRectItem();
-            _rectangle->setRect(mouseEvent->scenePos().x(), mouseEvent->scenePos().y(), 0, 0);
-            _rectangle->setBrush(Qt::red);
+            addRectangle(_draw_start_point);
             break;
         }
         case FigureType::Ellipse:
         {
-            item = _ellipse = new QGraphicsEllipseItem();
-            _ellipse->setRect(mouseEvent->scenePos().x(), mouseEvent->scenePos().y(), 0, 0);
-            _ellipse->setBrush(Qt::red);
+            addEllipse(_draw_start_point);
             break;
         }
-    }
-
-    if (item)
-    {
-        addItem(item);
-        _draw_start_point = mouseEvent->scenePos();
     }
 
     QGraphicsScene::mousePressEvent(mouseEvent);
@@ -45,27 +35,62 @@ void FigureScene::mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent)
 
 void FigureScene::mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
+    bool res = false;
+
     switch (_figureType)
     {
         case FigureType::Rectangle:
         {
-            _rectangle->setRect(QRectF(_draw_start_point, mouseEvent->scenePos()).normalized());
+            res = drawRectangle(mouseEvent->scenePos());
             break;
         }
         case FigureType::Ellipse:
         {
-            _ellipse->setRect(QRectF(_draw_start_point, mouseEvent->scenePos()).normalized());
+            res = drawEllipse(mouseEvent->scenePos());
             break;
         }
-        default:
-            QGraphicsScene::mouseMoveEvent(mouseEvent);
     }
+
+    if (res)
+        QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void FigureScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
-    if (_rectangle)
-        _rectangle = Q_NULLPTR;
+    _ellipse = Q_NULLPTR;
+    _rectangle = Q_NULLPTR;
 
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
+}
+
+void FigureScene::addRectangle(const QPointF& point)
+{
+    _rectangle = new QGraphicsRectItem();
+    _rectangle->setRect(point.x(), point.y(), 0, 0);
+    _rectangle->setBrush(QBrush(_figureColor));
+    _rectangle->setPen(QPen(_figureColor));
+    addItem(_rectangle);
+}
+
+bool FigureScene::drawRectangle(const QPointF& point)
+{
+    if (_rectangle)
+        _rectangle->setRect(QRectF(_draw_start_point, point).normalized());
+    return _rectangle != Q_NULLPTR;
+}
+
+void FigureScene::addEllipse(const QPointF& point)
+{
+    _ellipse = new QGraphicsEllipseItem();
+    _ellipse->setRect(point.x(), point.y(), 0, 0);
+    _ellipse->setBrush(QBrush(_figureColor));
+    _ellipse->setPen(QPen(_figureColor));
+    addItem(_ellipse);
+}
+
+bool FigureScene::drawEllipse(const QPointF& point)
+{
+    if (_ellipse)
+        _ellipse->setRect(QRectF(_draw_start_point, point).normalized());
+    return _rectangle != Q_NULLPTR;
 }

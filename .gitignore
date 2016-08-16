@@ -251,3 +251,8 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# QT
+moc_*.cpp
+qrc_*.cpp
+ui_*.h

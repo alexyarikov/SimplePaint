@@ -20,6 +20,7 @@ private:
     QPointer<QAction> _actRectangle;
     QPointer<QAction> _actEllipse;
     QPointer<QToolButton> _btnFigures;
+    QPointer<QComboBox> _cmbColors;
     QPointer<FigureScene> _scene;
 
     void setupUi();
@@ -37,4 +38,5 @@ private slots:
     void redo();
     void drawRectangle();
     void drawEllipse();
+    void colorChanged(int index);
 };
