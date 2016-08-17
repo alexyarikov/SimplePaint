@@ -61,7 +61,6 @@ void FigureScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
     _ellipse = Q_NULLPTR;
     _rectangle = Q_NULLPTR;
-
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 

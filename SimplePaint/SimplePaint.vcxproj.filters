@@ -58,9 +58,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_figurescene.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="RectangleFigure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleFigure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
