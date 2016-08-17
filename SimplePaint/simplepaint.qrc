@@ -7,8 +7,6 @@
     <file>images/redo.png</file>
     <file>images/rectangle.png</file>
     <file>images/ellipse.png</file>
-    <file>images/black.png</file>
-    <file>images/red.png</file>
-    <file>images/yellow.png</file>
+    <file>images/color.png</file>
 </qresource>
 </RCC>

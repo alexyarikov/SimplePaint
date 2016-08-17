@@ -19,8 +19,8 @@ private:
     QPointer<QAction> _actAbout;
     QPointer<QAction> _actRectangle;
     QPointer<QAction> _actEllipse;
+    QPointer<QAction> _actFigureColor;
     QPointer<QToolButton> _btnFigures;
-    QPointer<QComboBox> _cmbColors;
     QPointer<FigureScene> _scene;
 
     void setupUi();
@@ -29,6 +29,7 @@ private:
     void createToolbar();
     void createStatusBar();
     void createView();
+    QMenu* createFiguresMenu();
 
 private slots:
     void newDrawing();
@@ -38,5 +39,5 @@ private slots:
     void redo();
     void drawRectangle();
     void drawEllipse();
-    void colorChanged(int index);
+    void setFigureColor();
 };

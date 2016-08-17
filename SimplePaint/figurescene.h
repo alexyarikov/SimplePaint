@@ -11,7 +11,7 @@ public:
     enum class FigureType { Rectangle, Ellipse };
 
     void setFigureType(const FigureType figureType) { _figureType = figureType; };
-    void setFigureColor(const QColor& color) { _figureColor = color; }
+    void setFigureColor(const QColor& color) { _figurePen.setColor(color); }
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent) Q_DECL_OVERRIDE;
@@ -23,7 +23,7 @@ private:
     QGraphicsEllipseItem* _ellipse = Q_NULLPTR;
     QPointF _draw_start_point;
     FigureType _figureType = FigureType::Rectangle;
-    QColor _figureColor = Qt::black;
+    QPen _figurePen;
 
     void addRectangle(const QPointF& point);
     bool drawRectangle(const QPointF& point);

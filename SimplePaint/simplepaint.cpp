@@ -22,24 +22,6 @@ void SimplePaint::setupUi()
     createStatusBar();
 }
 
-void SimplePaint::createView()
-{
-    _scene = new FigureScene(this);
-    _scene->setSceneRect(QRectF(0, 0, 5000, 5000));
-
-    QHBoxLayout* layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-
-    QGraphicsView* view = new QGraphicsView(_scene);
-    view->setBackgroundBrush(QBrush(Qt::white));
-    layout->addWidget(view);
-
-    QWidget* central_widget = new QWidget();
-    central_widget->setLayout(layout);
-    central_widget->setCursor(Qt::CrossCursor);
-    setCentralWidget(central_widget);
-}
-
 void SimplePaint::createActions()
 {
     // new drawing action
@@ -72,6 +54,10 @@ void SimplePaint::createActions()
     _actAbout->setStatusTip(tr("About this application"));
     connect(_actAbout, &QAction::triggered, this, &SimplePaint::about);
 
+    _actFigureColor = new QAction(QIcon(":/images/color.png"), tr("&Figure color"), this);
+    _actFigureColor->setStatusTip(tr("Set figure color"));
+    connect(_actFigureColor, &QAction::triggered, this, &SimplePaint::setFigureColor);
+
     // draw rectangle
     _actRectangle = new QAction(QIcon(":/images/rectangle.png"), tr("&Rectangle"), this);
     _actRectangle->setStatusTip(tr("Draw rectangle"));
@@ -100,28 +86,18 @@ void SimplePaint::createMenu()
 
 void SimplePaint::createToolbar()
 {
-    QMenu* mnuFigures = new QMenu(this);
-    mnuFigures->addAction(_actRectangle);
-    mnuFigures->addAction(_actEllipse);
-
-    QToolBar *toolbar = addToolBar(tr("Simple paint"));
+    QToolBar* toolbar = addToolBar(qAppName());
     toolbar->addAction(_actNew);
     toolbar->addSeparator();
 
     // choose figure color
-    _cmbColors = new QComboBox(this);
-    _cmbColors->addItem(QIcon(":/images/black.png"), tr("Black"), QVariant((int)Qt::black));
-    _cmbColors->addItem(QIcon(":/images/red.png"), tr("Red"), QVariant((int)Qt::red));
-    _cmbColors->addItem(QIcon(":/images/yellow.png"), tr("Yellow"), QVariant((int)Qt::yellow));
-    _cmbColors->setCurrentIndex(0);
-    QObject::connect(_cmbColors, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SimplePaint::colorChanged);
-    toolbar->addWidget(_cmbColors);
+    toolbar->addAction(_actFigureColor);
     toolbar->addSeparator();
 
     // choose figure type
     _btnFigures = new QToolButton();
     _btnFigures->setPopupMode(QToolButton::InstantPopup);
-    _btnFigures->setMenu(mnuFigures);
+    _btnFigures->setMenu(createFiguresMenu());
     _btnFigures->setDefaultAction(_actRectangle);
     toolbar->addWidget(_btnFigures);
     toolbar->addSeparator();
@@ -140,14 +116,39 @@ void SimplePaint::createStatusBar()
     statusBar()->showMessage(tr("Ready"));
 }
 
+void SimplePaint::createView()
+{
+    _scene = new FigureScene(this);
+    _scene->setSceneRect(QRectF(0, 0, 5000, 5000));
+
+    QHBoxLayout* layout = new QHBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    QGraphicsView* view = new QGraphicsView(_scene);
+    layout->addWidget(view);
+
+    QWidget* central_widget = new QWidget();
+    central_widget->setLayout(layout);
+    central_widget->setCursor(Qt::CrossCursor);
+    setCentralWidget(central_widget);
+}
+
+QMenu* SimplePaint::createFiguresMenu()
+{
+    QMenu* mnuFigures = new QMenu(this);
+    mnuFigures->addAction(_actRectangle);
+    mnuFigures->addAction(_actEllipse);
+    return mnuFigures;
+}
+
 void SimplePaint::newDrawing()
 {
-    QMessageBox::information(Q_NULLPTR, qAppName(), "newDrawing");
+    _scene->clear();
 }
 
 void SimplePaint::about()
 {
-    QMessageBox::information(Q_NULLPTR, qAppName(), "about");
+    QMessageBox::about(Q_NULLPTR, qAppName(), "");
 }
 
 void SimplePaint::exit()
@@ -157,12 +158,12 @@ void SimplePaint::exit()
 
 void SimplePaint::undo()
 {
-    QMessageBox::information(Q_NULLPTR, qAppName(), "undo");
+    QMessageBox::information(Q_NULLPTR, qAppName(), "Not implemented yet");
 }
 
 void SimplePaint::redo()
 {
-    QMessageBox::information(Q_NULLPTR, qAppName(), "redo");
+    QMessageBox::information(Q_NULLPTR, qAppName(), "Not implemented yet");
 }
 
 void SimplePaint::drawRectangle()
@@ -177,9 +178,9 @@ void SimplePaint::drawEllipse()
     _btnFigures->setDefaultAction(_actEllipse);
 }
 
-void SimplePaint::colorChanged(int index)
+void SimplePaint::setFigureColor()
 {
-    QComboBox* combobox = qobject_cast<QComboBox*>(sender());
-    if (combobox)
-        _scene->setFigureColor(QColor((Qt::GlobalColor)combobox->itemData(index).toInt()));
+    const QColor color = QColorDialog::getColor(Qt::black, this, "Select color");
+    if (color.isValid())
+        _scene->setFigureColor(color);
 }

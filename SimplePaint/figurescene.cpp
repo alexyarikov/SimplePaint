@@ -3,6 +3,8 @@
 
 FigureScene::FigureScene(QObject* parent) : QGraphicsScene(parent)
 {
+    _figurePen.setColor(Qt::black);
+    _figurePen.setWidthF(1.5);
 }
 
 FigureScene::~FigureScene()
@@ -66,9 +68,8 @@ void FigureScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 void FigureScene::addRectangle(const QPointF& point)
 {
     _rectangle = new QGraphicsRectItem();
+    _rectangle->setPen(_figurePen);
     _rectangle->setRect(point.x(), point.y(), 0, 0);
-    _rectangle->setBrush(QBrush(_figureColor));
-    _rectangle->setPen(QPen(_figureColor));
     addItem(_rectangle);
 }
 
@@ -82,9 +83,8 @@ bool FigureScene::drawRectangle(const QPointF& point)
 void FigureScene::addEllipse(const QPointF& point)
 {
     _ellipse = new QGraphicsEllipseItem();
+    _ellipse->setPen(_figurePen);
     _ellipse->setRect(point.x(), point.y(), 0, 0);
-    _ellipse->setBrush(QBrush(_figureColor));
-    _ellipse->setPen(QPen(_figureColor));
     addItem(_ellipse);
 }
 
