@@ -67,6 +67,12 @@ void SimplePaint::createActions()
     _actEllipse = new QAction(QIcon(":/images/ellipse.png"), tr("&Ellipse"), this);
     _actEllipse->setStatusTip(tr("Draw rectangle"));
     connect(_actEllipse, &QAction::triggered, this, &SimplePaint::drawEllipse);
+
+    // toggle select mode
+    _actSelectMode = new QAction(QIcon(":/images/select_mode.png"), tr("&Select mode"), this);
+    _actSelectMode->setStatusTip(tr("Select mode"));
+    _actSelectMode->setCheckable(true);
+    connect(_actSelectMode, &QAction::triggered, this, &SimplePaint::toggleSelectMode);
 }
 
 void SimplePaint::createMenu()
@@ -92,6 +98,10 @@ void SimplePaint::createToolbar()
 
     // choose figure color
     toolbar->addAction(_actFigureColor);
+    toolbar->addSeparator();
+
+    // toggle select mode
+    toolbar->addAction(_actSelectMode);
     toolbar->addSeparator();
 
     // choose figure type
@@ -124,8 +134,8 @@ void SimplePaint::createView()
     QHBoxLayout* layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    QGraphicsView* view = new QGraphicsView(_scene);
-    layout->addWidget(view);
+    _view = new QGraphicsView(_scene);
+    layout->addWidget(_view);
 
     QWidget* central_widget = new QWidget();
     central_widget->setLayout(layout);
@@ -183,4 +193,11 @@ void SimplePaint::setFigureColor()
     const QColor color = QColorDialog::getColor(Qt::black, this, "Select color");
     if (color.isValid())
         _scene->setFigureColor(color);
+}
+
+void SimplePaint::toggleSelectMode()
+{
+    bool on = _actSelectMode->isChecked();
+    _view->setCursor(on ? Qt::OpenHandCursor : Qt::CrossCursor);
+    _scene->setSelectMode(on);
 }

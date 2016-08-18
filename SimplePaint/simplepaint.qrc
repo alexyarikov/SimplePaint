@@ -8,5 +8,6 @@
     <file>images/rectangle.png</file>
     <file>images/ellipse.png</file>
     <file>images/color.png</file>
+    <file>images/select_mode.png</file>
 </qresource>
 </RCC>

@@ -12,6 +12,7 @@ public:
     FigureScene(QObject* parent = Q_NULLPTR);
     ~FigureScene();
 
+    void setSelectMode(const bool on);
     void setFigureType(const FigureFactory::FigureType figureType) { _figureType = figureType; };
     void setFigureColor(const QColor& color) { _figurePen.setColor(color); }
 
@@ -25,4 +26,5 @@ private:
     FigureFactory::FigureType _figureType = FigureFactory::Rectangle;
     QPen _figurePen;
     FigureFactory _figureFactory;
+    bool _selectMode = false;
 };

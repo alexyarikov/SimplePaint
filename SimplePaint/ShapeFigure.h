@@ -22,8 +22,6 @@ public:
 template <class TShapeParent>
 ShapeFigure<TShapeParent>::ShapeFigure(const QPen& pen) : BaseFigure(pen)
 {
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
     setAcceptedMouseButtons(Qt::LeftButton);
     setPen(pen);
 }

@@ -20,7 +20,9 @@ private:
     QPointer<QAction> _actRectangle;
     QPointer<QAction> _actEllipse;
     QPointer<QAction> _actFigureColor;
+    QPointer<QAction> _actSelectMode;
     QPointer<QToolButton> _btnFigures;
+    QPointer<QGraphicsView> _view;
     QPointer<FigureScene> _scene;
 
     void setupUi();
@@ -40,4 +42,5 @@ private slots:
     void drawRectangle();
     void drawEllipse();
     void setFigureColor();
+    void toggleSelectMode();
 };
