@@ -168,13 +168,13 @@ void SimplePaint::redo()
 
 void SimplePaint::drawRectangle()
 {
-    _scene->setFigureType(FigureScene::FigureType::Rectangle);
+    _scene->setFigureType(FigureFactory::FigureType::Rectangle);
     _btnFigures->setDefaultAction(_actRectangle);
 }
 
 void SimplePaint::drawEllipse()
 {
-    _scene->setFigureType(FigureScene::FigureType::Ellipse);
+    _scene->setFigureType(FigureFactory::FigureType::Ellipse);
     _btnFigures->setDefaultAction(_actEllipse);
 }
 
