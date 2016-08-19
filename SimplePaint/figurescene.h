@@ -1,30 +1,37 @@
 #pragma once
 
+#include "Common.h"
 #include "FigureFactory.h"
 
-class BaseFigure;
-
-class FigureScene : public QGraphicsScene
+namespace SimplePaint
 {
-    Q_OBJECT
+    class BaseFigure;
 
-public:
-    FigureScene(QObject* parent = Q_NULLPTR);
-    ~FigureScene();
+    class FigureScene : public QGraphicsScene
+    {
+        Q_OBJECT
 
-    void setSelectMode(const bool on);
-    void setFigureType(const FigureFactory::FigureType figureType) { _figureType = figureType; };
-    void setFigureColor(const QColor& color) { _figurePen.setColor(color); }
+    public:
+        FigureScene(QObject* parent = Q_NULLPTR);
+        ~FigureScene();
 
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent) Q_DECL_OVERRIDE;
+        void setSelectMode(const bool on);
+        void setFigureType(const FigureType figureType) { _figureType = figureType;   }
+        void setFigureColor(const QColor& color)        { _figurePen.setColor(color); }
 
-private:
-    BaseFigure* _figure = Q_NULLPTR;
-    FigureFactory::FigureType _figureType = FigureFactory::Rectangle;
-    QPen _figurePen;
-    FigureFactory _figureFactory;
-    bool _selectMode = false;
-};
+    protected:
+        void mousePressEvent(QGraphicsSceneMouseEvent* mouseEvent) override;
+        void mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent) override;
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent) override;
+
+    private:
+        QGraphicsItem* _figure = Q_NULLPTR;
+        FigureType _figureType = FigureType::Rectangle;
+        QPen _figurePen;
+        FigureFactory _figureFactory;
+        bool _selectMode = false;
+
+    signals:
+        void figureCreated(QGraphicsItem& figure, const FigureType figureType, const QPointF& initial_point);
+    };
+}

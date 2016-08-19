@@ -58,6 +58,12 @@
     <ClCompile Include="GeneratedFiles\Release\moc_figurescene.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="MoveFigureCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddFigureCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -66,10 +72,16 @@
     <ClInclude Include="FigureFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseFigure.h">
+    <ClInclude Include="ShapeFigure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShapeFigure.h">
+    <ClInclude Include="AddFigureCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveFigureCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

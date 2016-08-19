@@ -1,58 +1,56 @@
 #pragma once
 
-class BaseFigure;
-
-class AbstractFigureCreator
+namespace SimplePaint
 {
-public:
-    AbstractFigureCreator() {};
-    virtual ~AbstractFigureCreator() {};
-    virtual BaseFigure* create(const QPen& pen) const = 0;
-};
-
-template <class FigureClass>
-class FigureCreator : public AbstractFigureCreator
-{
-public:
-    FigureCreator() {};
-    ~FigureCreator() {};
-
-public:
-    BaseFigure* create(const QPen& pen) const override { return new FigureClass(pen); }
-};
-
-class FigureFactory
-{
-public:
-    FigureFactory() {};
-    ~FigureFactory()
+    class AbstractFigureCreator
     {
-        for (auto creator : _creators.values())
-            delete creator;
-    }
+    public:
+        AbstractFigureCreator() {};
+        virtual ~AbstractFigureCreator() {};
+        virtual QGraphicsItem* create(const QPointF& initial_pos, QPen& pen) const = 0;
+    };
 
-    // figure types
-    enum FigureType { Rectangle, Ellipse };
-
-    // register figure type
-    template <class FigureClass> void add(const FigureType figureType)
+    template <class FigureClass>
+    class FigureCreator : public AbstractFigureCreator
     {
-        _creators.insert(figureType, new FigureCreator<FigureClass>());
-    }
+    public:
+        FigureCreator() {};
+        ~FigureCreator() {};
 
-    // create figure type object
-    BaseFigure* create(const FigureType figureType, const QPen& pen) const
+    public:
+        QGraphicsItem* create(const QPointF& initial_pos, QPen& pen) const override { return new FigureClass(initial_pos, pen); }
+    };
+
+    class FigureFactory
     {
-        if (_creators.contains(figureType))
+    public:
+        FigureFactory() {};
+        ~FigureFactory()
         {
-            auto creator = _creators.value(figureType);
-            if (creator)
-                return creator->create(pen);
+            for (auto creator : _creators.values())
+                delete creator;
         }
-        return Q_NULLPTR;
-    }
 
-private:
-    typedef QHash<FigureType, AbstractFigureCreator*> Creators;
-    Creators _creators;
-};
+        // register figure type
+        template <class FigureClass> void add(const FigureType figureType)
+        {
+            _creators.insert(figureType, new FigureCreator<FigureClass>());
+        }
+
+        // create figure type object
+        QGraphicsItem* create(const FigureType figureType, const QPointF& initial_pos, QPen& pen) const
+        {
+            if (_creators.contains(figureType))
+            {
+                auto creator = _creators.value(figureType);
+                if (creator)
+                    return creator->create(initial_pos, pen);
+            }
+            return Q_NULLPTR;
+        }
+
+    private:
+        typedef QHash<FigureType, AbstractFigureCreator*> Creators;
+        Creators _creators;
+    };
+}
