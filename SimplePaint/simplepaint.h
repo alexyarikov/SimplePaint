@@ -46,6 +46,7 @@ namespace SimplePaint
         void toggleSelectMode();
 
     private slots:
-        void figureCreated(QGraphicsItem& figure, const FigureType figureType, const QPointF& initial_point);
+        void figureCreated(QGraphicsItem& figure);
+        void figuresMoved(QList<QGraphicsItem*>& figures, QList<QPointF>& figuresOldPos);
     };
 }

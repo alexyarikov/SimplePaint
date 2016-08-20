@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SimplePaint.h"
 #include "AddFigureCommand.h"
+#include "MoveFigureCommand.h"
 
 namespace SimplePaint
 {
@@ -150,6 +151,7 @@ namespace SimplePaint
     void SimplePaint::createConnections()
     {
         QObject::connect(_scene, &FigureScene::figureCreated, this, &SimplePaint::figureCreated);
+        QObject::connect(_scene, &FigureScene::figuresMoved, this, &SimplePaint::figuresMoved);
     }
 
     QMenu* SimplePaint::createFiguresMenu()
@@ -163,11 +165,12 @@ namespace SimplePaint
     void SimplePaint::newDrawing()
     {
         _scene->clear();
+        _undoStack->clear();
     }
 
     void SimplePaint::about()
     {
-        QMessageBox::about(Q_NULLPTR, qAppName(), "");
+        QMessageBox::about(Q_NULLPTR, "About " + qAppName(), "Test task application implementing simple graphical editor");
     }
 
     void SimplePaint::exit()
@@ -201,9 +204,13 @@ namespace SimplePaint
         _scene->setSelectMode(on);
     }
 
-    void SimplePaint::figureCreated(QGraphicsItem& figure, const FigureType figureType, const QPointF& initialPoint)
+    void SimplePaint::figureCreated(QGraphicsItem& figure)
     {
-        QUndoCommand* addCommand = new AddFigureCommand(*_scene, figure, figureType, initialPoint);
-        _undoStack->push(addCommand);
+        _undoStack->push(new AddFigureCommand(*_scene, figure));
+    }
+
+    void SimplePaint::figuresMoved(QList<QGraphicsItem*>& figures, QList<QPointF>& figuresOldPos)
+    {
+        _undoStack->push(new MoveFigureCommand(figures, figuresOldPos));
     }
 }

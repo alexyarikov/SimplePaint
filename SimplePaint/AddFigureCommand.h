@@ -9,10 +9,7 @@ namespace SimplePaint
     class AddFigureCommand : public QUndoCommand
     {
     public:
-        AddFigureCommand(FigureScene& scene,
-                         QGraphicsItem& figure,
-                         const FigureType figureType,
-                         const QPointF& initialPos);
+        AddFigureCommand(FigureScene& scene, QGraphicsItem& figure);
         ~AddFigureCommand() override {};
 
         void undo() override;
@@ -21,6 +18,5 @@ namespace SimplePaint
     private:
         FigureScene& _scene;
         QGraphicsItem& _figure;
-        QPointF _initialPos;
     };
 }

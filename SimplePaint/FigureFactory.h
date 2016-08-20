@@ -7,7 +7,7 @@ namespace SimplePaint
     public:
         AbstractFigureCreator() {};
         virtual ~AbstractFigureCreator() {};
-        virtual QGraphicsItem* create(const QPointF& initial_pos, QPen& pen) const = 0;
+        virtual QGraphicsItem* create(const QPointF& initialPos, QPen& pen) const = 0;
     };
 
     template <class FigureClass>
@@ -18,7 +18,7 @@ namespace SimplePaint
         ~FigureCreator() {};
 
     public:
-        QGraphicsItem* create(const QPointF& initial_pos, QPen& pen) const override { return new FigureClass(initial_pos, pen); }
+        QGraphicsItem* create(const QPointF& initialPos, QPen& pen) const override { return new FigureClass(initialPos, pen); }
     };
 
     class FigureFactory
@@ -38,13 +38,13 @@ namespace SimplePaint
         }
 
         // create figure type object
-        QGraphicsItem* create(const FigureType figureType, const QPointF& initial_pos, QPen& pen) const
+        QGraphicsItem* create(const FigureType figureType, const QPointF& initialPos, QPen& pen) const
         {
             if (_creators.contains(figureType))
             {
                 auto creator = _creators.value(figureType);
                 if (creator)
-                    return creator->create(initial_pos, pen);
+                    return creator->create(initialPos, pen);
             }
             return Q_NULLPTR;
         }

@@ -1,32 +1,31 @@
 #pragma once
 
+#include "DrawableFigure.h"
+
 namespace SimplePaint
 {
-    template <class TParentClass>
-    class ShapeFigure : public TParentClass
+    template <class GraphicsItemClass>
+    class ShapeFigure : public GraphicsItemClass, public DrawableFigure
     {
     public:
-        ShapeFigure(const QPointF& initial_pos, QPen& pen) : _initial_pos(initial_pos)
+        ShapeFigure(const QPointF& initialPos, QPen& pen) : DrawableFigure(initialPos)
         {
             setPen(pen);
         };
         ~ShapeFigure() override {};
 
     protected:
-        void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override
+        void draw(const QPointF& pos) override
         {
-            setRect(QRectF(_initial_pos, event->scenePos()).normalized());
+            setRect(QRectF(initialPos(), pos).normalized());
         }
-
-    private:
-        QPointF _initial_pos;
     };
 
     // rectangle figure class
     class RectangleFigure : public ShapeFigure<QGraphicsRectItem>
     {
     public:
-        RectangleFigure(const QPointF& initial_pos, QPen& pen) : ShapeFigure(initial_pos, pen) {};
+        RectangleFigure(const QPointF& initialPos, QPen& pen) : ShapeFigure(initialPos, pen) {};
         ~RectangleFigure() override {};
     };
 
@@ -34,7 +33,7 @@ namespace SimplePaint
     class EllipseFigure : public ShapeFigure<QGraphicsEllipseItem>
     {
     public:
-        EllipseFigure(const QPointF& initial_pos, QPen& pen) : ShapeFigure(initial_pos, pen) {};
+        EllipseFigure(const QPointF& initialPos, QPen& pen) : ShapeFigure(initialPos, pen) {};
         ~EllipseFigure() override {};
     };
 }

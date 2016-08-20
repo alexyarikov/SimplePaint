@@ -5,8 +5,6 @@
 
 namespace SimplePaint
 {
-    class BaseFigure;
-
     class FigureScene : public QGraphicsScene
     {
         Q_OBJECT
@@ -25,13 +23,15 @@ namespace SimplePaint
         void mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent) override;
 
     private:
-        QGraphicsItem* _figure = Q_NULLPTR;
         FigureType _figureType = FigureType::Rectangle;
         QPen _figurePen;
         FigureFactory _figureFactory;
         bool _selectMode = false;
+        QList<QGraphicsItem*> _figures;
+        QList<QPointF> _movedFiguresOldPos;
 
     signals:
-        void figureCreated(QGraphicsItem& figure, const FigureType figureType, const QPointF& initial_point);
+        void figureCreated(QGraphicsItem& figure);
+        void figuresMoved(QList<QGraphicsItem*>& figures, QList<QPointF>& figuresOldPos);
     };
 }

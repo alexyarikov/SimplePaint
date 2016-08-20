@@ -3,30 +3,24 @@
 
 namespace SimplePaint
 {
-    MoveFigureCommand::MoveFigureCommand(const FigureType figureType, QGraphicsItem* figure, const QPointF& oldPos) :
-        _figure(figure),
+    MoveFigureCommand::MoveFigureCommand(QList<QGraphicsItem*> figures, QList<QPointF> oldPos) :
+        _figures(figures),
         _oldPos(oldPos)
     {
-        _newPos = figure->pos();
-        /*setText(QObject::tr("Move %1 from (%2, %3) to (%3, %4)")
-                .arg(figureName(figureType))
-                .arg(oldPos.x()).arg(oldPos.y())
-                .arg(newPos.x()).arg(newPos.y()));*/
-    }
-
-    MoveFigureCommand::~MoveFigureCommand()
-    {
-        _figure = Q_NULLPTR;
+        Q_ASSERT(_figures.size() == _oldPos.size());
+        for (QGraphicsItem* figure : figures)
+            _newPos.push_back(figure->pos());
     }
 
     void MoveFigureCommand::undo()
     {
-        _figure->setPos(_oldPos);
-        _figure->scene()->update();
+        for (int i = 0; i < _figures.size(); i++)
+            _figures[i]->setPos(_oldPos[i]);
     }
 
     void MoveFigureCommand::redo()
     {
-        _figure->setPos(_newPos);
+        for (int i = 0; i < _figures.size(); i++)
+            _figures[i]->setPos(_newPos[i]);
     }
 }
