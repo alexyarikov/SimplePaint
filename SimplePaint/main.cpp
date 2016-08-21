@@ -1,10 +1,17 @@
 #include "stdafx.h"
-#include "SimplePaint.h"
+#include "SimplePaintView.h"
+#include "SimplePaintModel.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    SimplePaint::SimplePaint w;
-    w.show();
-    return a.exec();
+    QApplication app(argc, argv);
+
+    // application is easy and doesn't require separate abstraction layers of controller/presenter classes
+    // to avoid over-engineering, there are Model (in fact model+controller) containing figures scene and implementing business logic
+    // and View to show all that stuff
+    SimplePaint::SimplePaintModel* model = new SimplePaint::SimplePaintModel(&app);
+    SimplePaint::SimplePaintView view(*model);
+    view.show();
+
+    return app.exec();
 }

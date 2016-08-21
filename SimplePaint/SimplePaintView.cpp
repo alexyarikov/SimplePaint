@@ -1,54 +1,51 @@
 #include "stdafx.h"
-#include "SimplePaint.h"
-#include "AddFigureCommand.h"
-#include "MoveFigureCommand.h"
+#include "SimplePaintView.h"
+#include "SimplePaintModel.h"
+#include "FigureScene.h"
 
 namespace SimplePaint
 {
-    SimplePaint::SimplePaint(QWidget *parent) : QMainWindow(parent)
-    {
-        _undoStack = new QUndoStack(this);
-        setupUi();
-    }
-
-    SimplePaint::~SimplePaint()
-    {
-    }
-
-    void SimplePaint::setupUi()
+    SimplePaintView::SimplePaintView(SimplePaintModel& model)
     {
         resize(800, 600);
 
-        createActions();
+        createActions(model.undoStack());
         createMenu();
         createToolbar();
-        createView();
+        createFiguresView(model.scene());
         createStatusBar();
-        createConnections();
+
+        model.setView(this);
     }
 
-    void SimplePaint::createActions()
+    SimplePaintView::~SimplePaintView()
     {
+    }
+
+    void SimplePaintView::createActions(QUndoStack* undoStack)
+    {
+        Q_CHECK_PTR(undoStack);
+
         // new drawing action
         _actNew = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
         _actNew->setShortcuts(QKeySequence::New);
         _actNew->setStatusTip(tr("New drawing"));
-        connect(_actNew, &QAction::triggered, this, &SimplePaint::newDrawing);
+        Q_ASSERT(QObject::connect(_actNew, &QAction::triggered, this, &SimplePaintView::newDrawing));
 
         // exit action
         _actExit = new QAction(QIcon(":/images/exit.png"), tr("E&xit"), this);
         _actExit->setShortcuts(QKeySequence::Quit);
         _actExit->setStatusTip(tr("Exit the application"));
-        connect(_actExit, &QAction::triggered, this, &SimplePaint::exit);
+        Q_ASSERT(QObject::connect(_actExit, &QAction::triggered, qApp, &QApplication::closeAllWindows));
 
         // undo action
-        _actUndo = _undoStack->createUndoAction(this, tr("&Undo"));
+        _actUndo = undoStack->createUndoAction(this, tr("&Undo"));
         _actUndo->setIcon(QIcon(":/images/undo.png"));
         _actUndo->setShortcuts(QKeySequence::Undo);
         _actUndo->setStatusTip(tr("Undo"));
 
         // redo action
-        _actRedo = _undoStack->createRedoAction(this, tr("&Redo"));
+        _actRedo = undoStack->createRedoAction(this, tr("&Redo"));
         _actRedo->setIcon(QIcon(":/images/redo.png"));
         _actRedo->setShortcuts(QKeySequence::Redo);
         _actRedo->setStatusTip(tr("Redo"));
@@ -57,30 +54,32 @@ namespace SimplePaint
         _actAbout = new QAction(QIcon(":/images/about.png"), tr("&About"), this);
         _actAbout->setShortcuts(QKeySequence::HelpContents);
         _actAbout->setStatusTip(tr("About this application"));
-        connect(_actAbout, &QAction::triggered, this, &SimplePaint::about);
+        Q_ASSERT(QObject::connect(_actAbout, &QAction::triggered, this, &SimplePaintView::onAbout));
 
         _actFigureColor = new QAction(QIcon(":/images/color.png"), tr("&Figure color"), this);
         _actFigureColor->setStatusTip(tr("Set figure color"));
-        connect(_actFigureColor, &QAction::triggered, this, &SimplePaint::setFigureColor);
+        Q_ASSERT(QObject::connect(_actFigureColor, &QAction::triggered, this, &SimplePaintView::onSetFigureColor));
 
         // draw rectangle
         _actRectangle = new QAction(QIcon(":/images/rectangle.png"), tr("&Rectangle"), this);
         _actRectangle->setStatusTip(tr("Draw rectangle"));
-        connect(_actRectangle, &QAction::triggered, this, &SimplePaint::drawRectangle);
+        Q_ASSERT(QObject::connect(_actRectangle, &QAction::triggered, this, &SimplePaintView::onSetFigureTypeRectangle));
+        Q_ASSERT(QObject::connect(_actRectangle, &QAction::triggered, this, &SimplePaintView::setFigureTypeRectangle));
 
         // draw ellipse
         _actEllipse = new QAction(QIcon(":/images/ellipse.png"), tr("&Ellipse"), this);
         _actEllipse->setStatusTip(tr("Draw rectangle"));
-        connect(_actEllipse, &QAction::triggered, this, &SimplePaint::drawEllipse);
+        Q_ASSERT(QObject::connect(_actEllipse, &QAction::triggered, this, &SimplePaintView::onSetFigureTypeEllipse));
+        Q_ASSERT(QObject::connect(_actEllipse, &QAction::triggered, this, &SimplePaintView::setFigureTypeEllipse));
 
         // toggle select mode
         _actSelectMode = new QAction(QIcon(":/images/select_mode.png"), tr("&Select mode"), this);
         _actSelectMode->setStatusTip(tr("Select mode"));
         _actSelectMode->setCheckable(true);
-        connect(_actSelectMode, &QAction::triggered, this, &SimplePaint::toggleSelectMode);
+        Q_ASSERT(QObject::connect(_actSelectMode, &QAction::triggered, this, &SimplePaintView::onToggleSelectMode));
     }
 
-    void SimplePaint::createMenu()
+    void SimplePaintView::createMenu()
     {
         QMenu *mnuFile = menuBar()->addMenu(tr("&File"));
         mnuFile->addAction(_actNew);
@@ -95,7 +94,7 @@ namespace SimplePaint
         mnuHelp->addAction(_actAbout);
     }
 
-    void SimplePaint::createToolbar()
+    void SimplePaintView::createToolbar()
     {
         QToolBar* toolbar = addToolBar(qAppName());
         toolbar->addAction(_actNew);
@@ -126,21 +125,18 @@ namespace SimplePaint
         toolbar->addAction(_actAbout);
     }
 
-    void SimplePaint::createStatusBar()
+    void SimplePaintView::createStatusBar()
     {
         statusBar()->showMessage(tr("Ready"));
     }
 
-    void SimplePaint::createView()
+    void SimplePaintView::createFiguresView(FigureScene* scene)
     {
-        _scene = new FigureScene(this);
-        _scene->setSceneRect(QRectF(0, 0, 5000, 5000));
-
         QHBoxLayout* layout = new QHBoxLayout();
         layout->setContentsMargins(0, 0, 0, 0);
 
-        _view = new QGraphicsView(_scene);
-        layout->addWidget(_view);
+        _figuresView = new QGraphicsView(scene);
+        layout->addWidget(_figuresView);
 
         QWidget* central_widget = new QWidget();
         central_widget->setLayout(layout);
@@ -148,69 +144,41 @@ namespace SimplePaint
         setCentralWidget(central_widget);
     }
 
-    void SimplePaint::createConnections()
+    QMenu* SimplePaintView::createFiguresMenu()
     {
-        QObject::connect(_scene, &FigureScene::figureCreated, this, &SimplePaint::figureCreated);
-        QObject::connect(_scene, &FigureScene::figuresMoved, this, &SimplePaint::figuresMoved);
+        QMenu* menu = new QMenu(this);
+        menu->addAction(_actRectangle);
+        menu->addAction(_actEllipse);
+        return menu;
     }
 
-    QMenu* SimplePaint::createFiguresMenu()
+    void SimplePaintView::onAbout()
     {
-        QMenu* mnuFigures = new QMenu(this);
-        mnuFigures->addAction(_actRectangle);
-        mnuFigures->addAction(_actEllipse);
-        return mnuFigures;
+        QMessageBox::about(Q_NULLPTR, "About " + qAppName(), "Simple graphical editor for drawing rectangles and ellipses with mouse and move them. Undo/redo operations are supported.");
     }
 
-    void SimplePaint::newDrawing()
+    void SimplePaintView::onSetFigureTypeRectangle()
     {
-        _scene->clear();
-        _undoStack->clear();
-    }
-
-    void SimplePaint::about()
-    {
-        QMessageBox::about(Q_NULLPTR, "About " + qAppName(), "Test task application implementing simple graphical editor");
-    }
-
-    void SimplePaint::exit()
-    {
-        qApp->closeAllWindows();
-    }
-
-    void SimplePaint::drawRectangle()
-    {
-        _scene->setFigureType(FigureType::Rectangle);
         _btnFigures->setDefaultAction(_actRectangle);
     }
 
-    void SimplePaint::drawEllipse()
+    void SimplePaintView::onSetFigureTypeEllipse()
     {
-        _scene->setFigureType(FigureType::Ellipse);
         _btnFigures->setDefaultAction(_actEllipse);
     }
 
-    void SimplePaint::setFigureColor()
+    void SimplePaintView::onSetFigureColor()
     {
-        const QColor color = QColorDialog::getColor(Qt::black, this, "Select color");
+        // get figure color from standard color selection dialog, inform the world about this
+        const QColor color = QColorDialog::getColor(Qt::black, this, "Select figure color");
         if (color.isValid())
-            _scene->setFigureColor(color);
+            emit setFigureColor(color);
     }
 
-    void SimplePaint::toggleSelectMode()
+    void SimplePaintView::onToggleSelectMode()
     {
         bool on = _actSelectMode->isChecked();
-        _view->setCursor(on ? Qt::OpenHandCursor : Qt::CrossCursor);
-        _scene->setSelectMode(on);
-    }
-
-    void SimplePaint::figureCreated(QGraphicsItem& figure)
-    {
-        _undoStack->push(new AddFigureCommand(*_scene, figure));
-    }
-
-    void SimplePaint::figuresMoved(QList<QGraphicsItem*>& figures, QList<QPointF>& figuresOldPos)
-    {
-        _undoStack->push(new MoveFigureCommand(figures, figuresOldPos));
+        _figuresView->setCursor(on ? Qt::OpenHandCursor : Qt::CrossCursor);
+        emit setSelectMode(on);
     }
 }

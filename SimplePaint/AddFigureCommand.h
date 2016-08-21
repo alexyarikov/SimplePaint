@@ -6,6 +6,7 @@ namespace SimplePaint
 {
     class FigureScene;
 
+    // class implementing undo/redo logic for add figure command
     class AddFigureCommand : public QUndoCommand
     {
     public:

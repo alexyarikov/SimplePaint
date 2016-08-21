@@ -4,6 +4,7 @@
 
 namespace SimplePaint
 {
+    // class implementing undo/redo logic for move figure command
     class MoveFigureCommand : public QUndoCommand
     {
     public:

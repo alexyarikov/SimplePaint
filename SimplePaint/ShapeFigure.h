@@ -4,6 +4,8 @@
 
 namespace SimplePaint
 {
+    // class for rectangle-based figures (rectangle, ellipse)
+    // template parameter is QGraphicsItem subclass to inherit from
     template <class GraphicsItemClass>
     class ShapeFigure : public GraphicsItemClass, public DrawableFigure
     {
@@ -15,6 +17,7 @@ namespace SimplePaint
         ~ShapeFigure() override {};
 
     protected:
+        // draw figure with mouse implementation, pos - current mouse position
         void draw(const QPointF& pos) override
         {
             setRect(QRectF(initialPos(), pos).normalized());

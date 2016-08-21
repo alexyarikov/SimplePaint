@@ -6,6 +6,9 @@ namespace SimplePaint
 {
     FigureScene::FigureScene(QObject* parent) : QGraphicsScene(parent)
     {
+        setSceneRect(0, 0, 5000, 5000);
+
+        // setup figures pen
         _figurePen.setColor(Qt::black);
         _figurePen.setWidthF(2);
 
@@ -20,6 +23,9 @@ namespace SimplePaint
 
     void FigureScene::setSelectMode(const bool on)
     {
+        // there are two modes - figure selection mode (on == true) to select figures
+        // and draw mode (on == false)
+        // set current mode and change figures corresponding flags
         _selectMode = on;
 
         for (QGraphicsItem* item : items())
@@ -34,30 +40,31 @@ namespace SimplePaint
         if (mouseEvent->button() != Qt::LeftButton)
             return;
 
-        QGraphicsScene::mousePressEvent(mouseEvent);
-
         _figures.clear();
         _movedFiguresOldPos.clear();
 
-        // create figure and add it to the scene in draw mode
         if (!_selectMode)
         {
+            // draw mode, create figure and inform the world about it
             _figures.push_back(_figureFactory.create(_figureType, mouseEvent->scenePos(), _figurePen));
             emit figureCreated(*_figures[0]);
         }
         else
         {
-            // save initial positions of figures to be moved
+            // select mode, save initial positions of figures to be moved
             _figures = selectedItems();
             for (QGraphicsItem* figure : _figures)
                 _movedFiguresOldPos.push_back(figure->pos());
         }
+
+        QGraphicsScene::mousePressEvent(mouseEvent);
     }
 
     void FigureScene::mouseMoveEvent(QGraphicsSceneMouseEvent* mouseEvent)
     {
         if (!_selectMode && !_figures.isEmpty())
         {
+            // draw mode, only the DrawableFigure-subclass knows how to draw itself with mouse, do it here
             DrawableFigure* drawableFigure = dynamic_cast<DrawableFigure*>(_figures[0]);
             if (drawableFigure)
                 drawableFigure->draw(mouseEvent->scenePos());
@@ -71,6 +78,7 @@ namespace SimplePaint
         if (mouseEvent->button() != Qt::LeftButton)
             return;
 
+        // selection mode, if figure(-s) were really moved, inform the world about it
         if (_selectMode && !_figures.isEmpty() && !_movedFiguresOldPos.isEmpty() && _figures[0]->pos() != _movedFiguresOldPos[0])
             emit figuresMoved(_figures, _movedFiguresOldPos);
 
