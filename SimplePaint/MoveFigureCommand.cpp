@@ -19,6 +19,9 @@ namespace SimplePaint
         // move figures to their old positions
         for (int i = 0; i < _figures.size(); i++)
             _figures[i]->setPos(_oldPos[i]);
+
+        if (!_figures.isEmpty())
+            _figures[0]->update();
     }
 
     void MoveFigureCommand::redo()
@@ -26,5 +29,8 @@ namespace SimplePaint
         // move figures to their new positions
         for (int i = 0; i < _figures.size(); i++)
             _figures[i]->setPos(_newPos[i]);
+
+        if (!_figures.isEmpty())
+            _figures[0]->update();
     }
 }

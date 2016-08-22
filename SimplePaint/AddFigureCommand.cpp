@@ -13,11 +13,13 @@ namespace SimplePaint
     void AddFigureCommand::undo()
     {
         _scene.removeItem(&_figure);
+        _scene.update();
     }
 
     void AddFigureCommand::redo()
     {
         _scene.addItem(&_figure);
         _scene.clearSelection();
+        _scene.update();
     }
 }
