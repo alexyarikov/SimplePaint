@@ -10,6 +10,8 @@ Build requirements:
 
 Executable files were built under Microsoft Windows 10 (x86).
 
-SimplePaint.exe     - launch SimplePaint application.
+Using:
 
-SimplePaintTest.exe - perform SimplePaint application tests.
+Unzip SimplePaint.zip.
+Run Release\SimplePaint.exe to launch SimplePaint application.
+Run Tests\SimplePaintTest.exe to perform SimplePaint application tests.
