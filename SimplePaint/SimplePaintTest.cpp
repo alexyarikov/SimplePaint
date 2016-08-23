@@ -3,23 +3,37 @@
 #include "SimplePaintModel.h"
 #include "SimplePaintViewTest.h"
 
+#define doTest(testFunc)                                                            \
+    SimplePaint::SimplePaintModel* model = new SimplePaint::SimplePaintModel(this); \
+    SimplePaint::SimplePaintViewTest view(*model);                                  \
+    view.testFunc();                                                                \
+
 void SimplePaintTest::testDrawingRectangle()
 {
-    SimplePaint::SimplePaintModel* model = new SimplePaint::SimplePaintModel(this);
-    SimplePaint::SimplePaintViewTest view(*model);
-    view.testDrawRectangle();
+    doTest(testDrawRectangle);
 }
 
 void SimplePaintTest::testDrawingEllipse()
 {
-    SimplePaint::SimplePaintModel* model = new SimplePaint::SimplePaintModel(this);
-    SimplePaint::SimplePaintViewTest view(*model);
-    view.testDrawEllipse();
+    doTest(testDrawEllipse);
 }
 
-void SimplePaintTest::testMoveFigure()
+void SimplePaintTest::testMoveFigures()
 {
-    SimplePaint::SimplePaintModel* model = new SimplePaint::SimplePaintModel(this);
-    SimplePaint::SimplePaintViewTest view(*model);
-    view.testMoveFigure();
+    doTest(testMoveFigures);
+}
+
+void SimplePaintTest::testUndo()
+{
+    doTest(testUndo);
+}
+
+void SimplePaintTest::testRedo()
+{
+    doTest(testRedo);
+}
+
+void SimplePaintTest::testNewDrawing()
+{
+    doTest(testNewDrawing);
 }

@@ -11,5 +11,8 @@ public:
 private slots:
     void testDrawingRectangle();
     void testDrawingEllipse();
-    void testMoveFigure();
+    void testMoveFigures();
+    void testUndo();
+    void testRedo();
+    void testNewDrawing();
 };

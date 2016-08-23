@@ -16,25 +16,19 @@ namespace SimplePaint
     }
 
     // test moving figures
-    void SimplePaintViewTest::testMoveFigure()
+    void SimplePaintViewTest::testMoveFigures()
     {
         // create 3 rectangles
         QPoint topLeft1(100, 100), topLeft2(100, 200), topLeft3(100, 300);
         QSize size(300, 100);
 
         QGraphicsRectItem* item1 = drawShapeFigure<QGraphicsRectItem>(FigureType::Rectangle, Qt::black, QRect(topLeft1, size));
-        QVERIFY(item1);
-
         QGraphicsRectItem* item2 = drawShapeFigure<QGraphicsRectItem>(FigureType::Rectangle, Qt::red, QRect(topLeft2, size));
-        QVERIFY(item2);
-
         QGraphicsRectItem* item3 = drawShapeFigure<QGraphicsRectItem>(FigureType::Rectangle, Qt::yellow, QRect(topLeft3, size));
-        QVERIFY(item3);
+        QVERIFY(item1 && item2 && item3);
 
-        // turn select mode on
+        // turn select mode on and select all figures
         emit setSelectMode(true);
-
-        // select all figures
         item1->setSelected(true);
         item2->setSelected(true);
         item3->setSelected(true);
@@ -51,6 +45,102 @@ namespace SimplePaint
         QVERIFY(checkFigureSize(*item1, QRect(topLeftNew1, size)));
         QVERIFY(checkFigureSize(*item2, QRect(topLeftNew2, size)));
         QVERIFY(checkFigureSize(*item3, QRect(topLeftNew3, size)));
+    }
+
+    // test undo
+    void SimplePaintViewTest::testUndo()
+    {
+        // draw two figures
+        QPoint topLeft1(100, 100), topLeft2(100, 200);
+        QSize size(300, 100);
+
+        QGraphicsEllipseItem* item1 = drawShapeFigure<QGraphicsEllipseItem>(FigureType::Ellipse, Qt::gray, QRect(topLeft1, size));
+        QGraphicsEllipseItem* item2 = drawShapeFigure<QGraphicsEllipseItem>(FigureType::Ellipse, Qt::magenta, QRect(topLeft2, size));
+        QVERIFY(item1 && item2);
+
+        // turn select mode on and select all figures
+        emit setSelectMode(true);
+        item1->setSelected(true);
+        item2->setSelected(true);
+
+        // move them
+        QPoint posFrom = QRect(topLeft1, size).center();
+        QPoint posTo = QRect(topLeft1 + QPoint(200, 100), size).center();
+        moveSelectedFigures(posFrom, posTo);
+
+        // undo move, check figures coordinates
+        _actUndo->activate(QAction::Trigger);
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(0), QRect(topLeft2, size)));
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(1), QRect(topLeft1, size)));
+
+        // undo second figure creation, check figures number and coordinates
+        _actUndo->activate(QAction::Trigger);
+        QCOMPARE(_figuresView->scene()->items().size(), 1);
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(0), QRect(topLeft1, size)));
+
+        // undo first figure creation, check figures number
+        _actUndo->activate(QAction::Trigger);
+        QVERIFY(_figuresView->scene()->items().isEmpty());
+    }
+
+    // test redo
+    void SimplePaintViewTest::testRedo()
+    {
+        // draw two figures
+        QPoint topLeft1(100, 100), topLeft2(100, 200);
+        QSize size(300, 100);
+
+        QGraphicsRectItem* item1 = drawShapeFigure<QGraphicsRectItem>(FigureType::Rectangle, Qt::cyan, QRect(topLeft1, size));
+        QGraphicsRectItem* item2 = drawShapeFigure<QGraphicsRectItem>(FigureType::Rectangle, Qt::white, QRect(topLeft2, size));
+        QVERIFY(item1 && item2);
+
+        // turn select mode on and select all figures
+        emit setSelectMode(true);
+        item1->setSelected(true);
+        item2->setSelected(true);
+
+        // move them
+        QPoint moveOffset(-100, -200);
+        moveSelectedFigures(topLeft1, topLeft1 + moveOffset);
+
+        // undo all, then redo, check figures number and their coordinates
+        _actUndo->activate(QAction::Trigger);
+        _actUndo->activate(QAction::Trigger);
+        _actUndo->activate(QAction::Trigger);
+        _actRedo->activate(QAction::Trigger);
+        QCOMPARE(_figuresView->scene()->items().size(), 1);
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(0), QRect(topLeft1, size)));
+
+        // redo, check figures number and their coordinates
+        _actRedo->activate(QAction::Trigger);
+        QCOMPARE(_figuresView->scene()->items().size(), 2);
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(0), QRect(topLeft2, size)));
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(1), QRect(topLeft1, size)));
+
+        // redo, check figures number and their coordinates
+        _actRedo->activate(QAction::Trigger);
+        QCOMPARE(_figuresView->scene()->items().size(), 2);
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(0), QRect(topLeft2 + moveOffset, size)));
+        QVERIFY(checkFigureSize(*_figuresView->scene()->items().at(1), QRect(topLeft1 + moveOffset, size)));
+    }
+
+    // test clear
+    void SimplePaintViewTest::testNewDrawing()
+    {
+        // draw figure
+        QPoint topLeft(100, 100);
+        QSize size(300, 100);
+
+        QGraphicsRectItem* item = drawShapeFigure<QGraphicsRectItem>(FigureType::Rectangle, Qt::blue, QRect(topLeft, size));
+        moveSelectedFigures(topLeft, topLeft + QPoint(-100, 100));
+
+        // turn select mode on and select figure
+        emit setSelectMode(true);
+        item->setSelected(true);
+
+        // new drawing (clear everything), check figures number
+        emit newDrawing();
+        QVERIFY(_figuresView->scene()->items().isEmpty());
     }
 
     // test drawing shaped figure

@@ -34,6 +34,18 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\Test">
+      <UniqueIdentifier>{449f47b7-5a95-42f0-b876-54d8c3c76e2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Test">
+      <UniqueIdentifier>{c32c273d-fd8a-4c61-9de2-1e9c551413f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Commands">
+      <UniqueIdentifier>{894250ba-619c-42af-a9be-dd849108e83f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Commands">
+      <UniqueIdentifier>{4c68e262-6a0b-49fb-af52-a9383eceafca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -48,19 +60,10 @@
     <ClCompile Include="figurescene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MoveFigureCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AddFigureCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SimplePaintView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SimplePaintModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SimplePaintTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_SimplePaintTest.cpp">
@@ -99,9 +102,6 @@
     <ClCompile Include="GeneratedFiles\Test\moc_FigureScene.cpp">
       <Filter>Generated Files\Test</Filter>
     </ClCompile>
-    <ClCompile Include="SimplePaintViewTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_SimplePaintViewTest.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -110,6 +110,18 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Test\moc_SimplePaintViewTest.cpp">
       <Filter>Generated Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="SimplePaintTest.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="SimplePaintViewTest.cpp">
+      <Filter>Source Files\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="AddFigureCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveFigureCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,17 +134,17 @@
     <ClInclude Include="ShapeFigure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AddFigureCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveFigureCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DrawableFigure.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveFigureCommand.h">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="AddFigureCommand.h">
+      <Filter>Header Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,10 +161,10 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="SimplePaintTest.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Test</Filter>
     </CustomBuild>
     <CustomBuild Include="SimplePaintViewTest.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Test</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

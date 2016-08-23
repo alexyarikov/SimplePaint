@@ -16,7 +16,10 @@ namespace SimplePaint
 
         void testDrawRectangle();
         void testDrawEllipse();
-        void testMoveFigure();
+        void testMoveFigures();
+        void testUndo();
+        void testRedo();
+        void testNewDrawing();
 
     private:
         template<class TGraphicsItem> void testDrawShapeFigure(const FigureType figureType, const QColor& figureColor, const QRect& figureRect);
