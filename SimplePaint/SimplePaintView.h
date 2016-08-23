@@ -9,6 +9,7 @@ namespace SimplePaint
     class SimplePaintView : public QMainWindow
     {
         Q_OBJECT
+        friend class SimplePaintViewTest;
 
     public:
         SimplePaintView(SimplePaintModel& model);

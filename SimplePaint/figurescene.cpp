@@ -10,7 +10,7 @@ namespace SimplePaint
 
         // setup figures pen
         _figurePen.setColor(Qt::black);
-        _figurePen.setWidthF(2);
+        _figurePen.setWidthF(SimplePaint::figurePenWidth);
 
         // register figure types
         _figureFactory.add<RectangleFigure>(FigureType::Rectangle);

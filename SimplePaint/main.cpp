@@ -2,6 +2,10 @@
 #include "SimplePaintView.h"
 #include "SimplePaintModel.h"
 
+#ifdef TEST
+#include "SimplePaintTest.h"
+QTEST_MAIN(SimplePaintTest)
+#else
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -13,5 +17,6 @@ int main(int argc, char *argv[])
     SimplePaint::SimplePaintView view(*model);
     view.show();
 
-    return app.exec();
+    return app.exec();    
 }
+#endif

@@ -34,15 +34,15 @@ namespace SimplePaint
     void SimplePaintModel::createConnections()
     {
         // create view <---> model connections
-        Q_ASSERT(QObject::connect(_view, &SimplePaintView::newDrawing, this, &SimplePaintModel::onNewDrawing));
-        Q_ASSERT(QObject::connect(_view, &SimplePaintView::setFigureTypeRectangle, this, &SimplePaintModel::onSetFigureTypeRectangle));
-        Q_ASSERT(QObject::connect(_view, &SimplePaintView::setFigureTypeEllipse, this, &SimplePaintModel::onSetFigureTypeEllipse));
-        Q_ASSERT(QObject::connect(_view, &SimplePaintView::setFigureColor, this, &SimplePaintModel::onSetFigureColor));
-        Q_ASSERT(QObject::connect(_view, &SimplePaintView::setSelectMode, this, &SimplePaintModel::onSetSelectMode));
+        QObject::connect(_view, &SimplePaintView::newDrawing, this, &SimplePaintModel::onNewDrawing);
+        QObject::connect(_view, &SimplePaintView::setFigureTypeRectangle, this, &SimplePaintModel::onSetFigureTypeRectangle);
+        QObject::connect(_view, &SimplePaintView::setFigureTypeEllipse, this, &SimplePaintModel::onSetFigureTypeEllipse);
+        QObject::connect(_view, &SimplePaintView::setFigureColor, this, &SimplePaintModel::onSetFigureColor);
+        QObject::connect(_view, &SimplePaintView::setSelectMode, this, &SimplePaintModel::onSetSelectMode);
 
         // create figure scene <---> model connections
-        Q_ASSERT(QObject::connect(_scene, &FigureScene::figureCreated, this, &SimplePaintModel::onFigureCreated));
-        Q_ASSERT(QObject::connect(_scene, &FigureScene::figuresMoved, this, &SimplePaintModel::onFiguresMoved));
+        QObject::connect(_scene, &FigureScene::figureCreated, this, &SimplePaintModel::onFigureCreated);
+        QObject::connect(_scene, &FigureScene::figuresMoved, this, &SimplePaintModel::onFiguresMoved);
     }
 
     void SimplePaintModel::onNewDrawing()
